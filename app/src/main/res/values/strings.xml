@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">ElevenBalls</string>
     <string name="chooser_share_post">Поделиться</string>
+    <string name="rules_balls">"    Перед Вами 11 шаров. Нужно убирать по 1–3 шара за раз.\n\n    Проигрывает тот, кто убирает последний шар"</string>
+    <string name="name_game">"Eleven Balls"</string>
+    <string name="number_bigger_stock">"Введенное число больше остатка"</string>
+    <string name="wrong_number">"Неправильно набрано число!\nПопробуй заново"</string>
+    <string name="stock">"Осталось %1$d"</string>
+    <string name="dont_be_upset">"Не расстраивайся!\nПовезет в другой раз"</string>
+    <string name="your_move">"Твой ход"</string>
+    <string name="i_removed">"Я убрал %1$d %2$s</string>
+    <string name="victory_message">"Можешь меня поздравить!!! Компьютер был обыгран мной в игре ELEVEN BALLS!"</string>
 </resources>

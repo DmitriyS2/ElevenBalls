@@ -1,7 +1,10 @@
 package com.sd.elevenballs.activity
 
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +15,6 @@ import com.sd.elevenballs.databinding.FragmentEndBinding
 import com.sd.elevenballs.util.StringArg
 
 class EndFragment : Fragment() {
-
-    private val arrayEnd = arrayOf(R.drawable.buket1, R.drawable.sharik1, R.drawable.salut1)
 
     companion object {
         var Bundle.textArg: String? by StringArg
@@ -29,26 +30,37 @@ class EndFragment : Fragment() {
         val message = arguments?.textArg
         val winner = arguments?.winner
         var image = 0
-        when(winner) {
+        when (winner) {
             "me" -> {
-                image = arrayEnd[arrayEnd.indices.random()]
+                image = R.drawable.victory
                 binding.buttonShare.visibility = View.VISIBLE
+                binding.text1.visibility = View.GONE
             }
+
             "comp" -> {
                 image = R.drawable.smile
                 binding.buttonShare.visibility = View.GONE
+                binding.text1.visibility = View.VISIBLE
             }
         }
-
 
         binding.image1.setImageResource(image)
         binding.text1.text = message
 
         binding.buttonShare.setOnClickListener {
+            val bitmap = BitmapFactory.decodeResource(resources, image)
+            val path = MediaStore.Images.Media.insertImage(
+                activity?.contentResolver,
+                bitmap,
+                "Title",
+                null
+            )
+            val uri = Uri.parse(path)
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, "Можешь меня поздравить!!! Компьютер был обыгран мной в игре ELEVEN BALLS!")
-                type = "text/plain"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.victory_message))
+                type = "image/*"
             }
 
             val shareIntent =

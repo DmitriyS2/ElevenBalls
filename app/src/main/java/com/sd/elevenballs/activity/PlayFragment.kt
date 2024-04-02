@@ -24,12 +24,8 @@ class PlayFragment : Fragment() {
         R.drawable.ball_orange_24,
         R.drawable.ball_yellow_24
     )
-    private val rulesBalls =
-        "    Перед Вами 11 шаров. Нужно убирать по 1-3 шара за раз.\n\n    Проигрывает тот, кто убирает последний шар"
-    private val titleBalls = "Eleven Balls"
 
     private var countBall = 11
-    private var inputBall = 0
     private var isWinComp = false
     private val adapter = BallAdapter()
 
@@ -52,16 +48,16 @@ class PlayFragment : Fragment() {
                 if (numberInput in 1..3) {
                     if ((countBall - numberInput) >= 0) {
                         binding.editNumber.setText("")
-                        Thread.sleep(1000)
+                        Thread.sleep(500)
                         elevenBalls(numberInput)
                     } else {
                         binding.editNumber.setText("")
-                        binding.textAnswer.text = "Введенное число больше остатка"
+                        binding.textAnswer.text = getString(R.string.number_bigger_stock)
                     }
 
                 } else {
                     binding.editNumber.setText("")
-                    binding.textAnswer.text = "Неправильно набрано число!\nПопробуй заново"
+                    binding.textAnswer.text = getString(R.string.wrong_number)
                 }
             }
         }
@@ -78,7 +74,7 @@ class PlayFragment : Fragment() {
                             }
 
                             R.id.rulesBalls -> {
-                                val menuDialog = MenuFragment(titleBalls, rulesBalls)
+                                val menuDialog = MenuFragment(getString(R.string.name_game), getString(R.string.rules_balls))
                                 val manager = childFragmentManager
                                 menuDialog.show(manager, "MENU_BALLS")
                                 true
@@ -101,14 +97,11 @@ class PlayFragment : Fragment() {
     private fun startGame() {
         adapter.ballList.clear()
         fragmentBinding?.apply {
-           // groupGame.visibility = View.VISIBLE
-        //    textAnswer.gravity = 0
-            textAnswer.text = "Твой ход"
+            textAnswer.text = getString(R.string.your_move)
             fillField()
             countBall = 11
-            inputBall = 0
             isWinComp = false
-            textCount.text = "Осталось $countBall"
+            textCount.text = getString(R.string.stock, countBall)
         }
     }
 
@@ -121,55 +114,37 @@ class PlayFragment : Fragment() {
 
     private fun elevenBalls(number:Int) {
         deleteBall(number)
-
-        var textAnswer = ""
+        var numberBall = 0
+        var shar = "шар"
         when(countBall){
             1 -> {
-                Thread.sleep(1500)
+                Thread.sleep(1000)
                 findNavController()
                     .navigate(R.id.action_playFragment_to_endFragment,
                         Bundle().apply {
-                            textArg = "Поздравляю!!!\nС победой!"
+                            textArg = ""
                             winner = "me"
                         })
-//                textAnswer = "Поздравляю!!!\nС победой!"
-//                countBall=0
-//                endGame(textAnswer)
             }
             2, 6 -> {
-                //countBall --
-                deleteBall(1)
-                textAnswer = "Я убрал 1 шар"
-      //          Thread.sleep(2000)
+                numberBall = 1
+                deleteBall(numberBall)
             }
             3, 7 -> {
-                //countBall -= 2
-                deleteBall(2)
-                textAnswer = "Я убрал 2 шарa"
-       //         Thread.sleep(2000)
+                numberBall = 2
+                deleteBall(numberBall)
+                 shar = "шара"
             }
             4, 8 -> {
-                //countBall -= 3
-                deleteBall(3)
-                textAnswer = "Я убрал 3 шарa"
-        //        Thread.sleep(2000)
+                numberBall = 3
+                deleteBall(numberBall)
             }
             5, 9, 10, 11 -> {
-                val randomNumber = (1..3).random()
-                val shar = if(randomNumber==1) "шар" else "шара"
-                //countBall -= randomNumber
-                deleteBall(randomNumber)
-                textAnswer = "Я убрал $randomNumber $shar"
-             //   Thread.sleep(2000)
+                numberBall = (1..3).random()
+                deleteBall(numberBall)
             }
         }
-
-//        if (countBall==1) {
-//            winComp()
-//        } else if(countBall!=0) {
-            fragmentBinding?.textAnswer?.text = textAnswer
-    //    Thread.sleep(2000)
-  //      }
+            fragmentBinding?.textAnswer?.text = getString(R.string.i_removed, numberBall, shar)
     }
 
     private fun deleteBall(count:Int) {
@@ -177,39 +152,16 @@ class PlayFragment : Fragment() {
             adapter.removeBall()
             countBall--
             if(countBall==0) {
-          //      winComp()
                 Thread.sleep(2000)
                 findNavController()
                     .navigate(R.id.action_playFragment_to_endFragment,
                         Bundle().apply {
-                            textArg = "Не расстраивайся!\nПовезет в другой раз"
+                            textArg = getString(R.string.dont_be_upset)
                             winner = "comp"
                         })
             }
         }
-        fragmentBinding?.textCount?.text = "Осталось $countBall"
+        fragmentBinding?.textCount?.text = getString(R.string.stock, countBall)
     }
-
-//    private fun winComp() {
-//        isWinComp = true
-//        endGame("Не расстраивайся!\nПовезет в другой раз")
-//    }
-
-//    private fun endGame(text:String) {
-//        binding.groupGame.visibility = View.GONE
-//        fragmentBinding?.textAnswer?.gravity = 1
-//        binding.textAnswer.text = text
-//        if(!isWinComp) {
-//            binding.pictureEnd.visibility = View.VISIBLE
-//            //     binding.pictureEnd.setImageResource(arrayEnd[arrayEnd.indices.random()])
-//        }
-//    }
-
-//    private fun exitGame() {
-//        val i = Intent()
-//        i.putExtra("result", "В какую игру будем играть?")
-//        setResult(AppCompatActivity.RESULT_OK, i)
-//        finish()
-//    }
 
 }
