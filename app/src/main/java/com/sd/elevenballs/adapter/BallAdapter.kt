@@ -39,7 +39,7 @@ class BallAdapter:RecyclerView.Adapter<BallAdapter.BallHolder>() {
     }
 
     fun removeBall() {
-        ballList.removeLast()
+        ballList.removeAt(ballList.lastIndex)
         notifyDataSetChanged()
     }
 

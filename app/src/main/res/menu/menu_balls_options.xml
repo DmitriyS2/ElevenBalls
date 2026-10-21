@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Новая игра" android:id="@+id/newGameBalls"/>
-    <item android:title="Правила" android:id="@+id/rulesBalls"/>
+    <item
+        android:id="@+id/newGameBalls"
+        android:title="@string/new_game" />
+    <item
+        android:id="@+id/rulesBalls"
+        android:title="@string/rules" />
 </menu>

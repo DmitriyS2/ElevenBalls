@@ -1,14 +1,14 @@
-package com.sd.elevenballs.activity
+package com.sd.elevenballs.fragments.endScreen
 
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.sd.elevenballs.R
 import com.sd.elevenballs.databinding.FragmentEndBinding
@@ -71,7 +71,7 @@ class EndFragment : Fragment() {
 
         binding.buttonNewGame.setOnClickListener {
             findNavController()
-                .navigate(R.id.action_endFragment_to_playFragment)
+                .navigate(R.id.action_endFragment_to_startFragment)
         }
 
         return binding.root
