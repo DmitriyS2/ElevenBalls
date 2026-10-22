@@ -2,7 +2,6 @@ package com.sd.elevenballs.fragments.endScreen
 
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -13,8 +12,13 @@ import androidx.navigation.fragment.findNavController
 import com.sd.elevenballs.R
 import com.sd.elevenballs.databinding.FragmentEndBinding
 import com.sd.elevenballs.util.StringArg
+import androidx.core.net.toUri
 
 class EndFragment : Fragment() {
+
+    private var _binding: FragmentEndBinding? = null
+    private val binding: FragmentEndBinding
+        get() = _binding!!
 
     companion object {
         var Bundle.textArg: String? by StringArg
@@ -25,7 +29,12 @@ class EndFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentEndBinding.inflate(inflater, container, false)
+        _binding = FragmentEndBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val message = arguments?.textArg
         val winner = arguments?.winner
@@ -38,7 +47,7 @@ class EndFragment : Fragment() {
             }
 
             "comp" -> {
-                image = R.drawable.smile
+                image = R.drawable.pity
                 binding.buttonShare.visibility = View.GONE
                 binding.text1.visibility = View.VISIBLE
             }
@@ -55,7 +64,7 @@ class EndFragment : Fragment() {
                 "Title",
                 null
             )
-            val uri = Uri.parse(path)
+            val uri = path.toUri()
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_STREAM, uri)
@@ -63,18 +72,12 @@ class EndFragment : Fragment() {
                 type = "image/*"
             }
 
-            val shareIntent =
-                Intent.createChooser(intent, getString(R.string.chooser_share_post))
-
+            val shareIntent = Intent.createChooser(intent, getString(R.string.chooser_share_post))
             startActivity(shareIntent)
         }
 
         binding.buttonNewGame.setOnClickListener {
-            findNavController()
-                .navigate(R.id.action_endFragment_to_startFragment)
+            findNavController().navigate(R.id.action_endFragment_to_startFragment)
         }
-
-        return binding.root
     }
-
 }

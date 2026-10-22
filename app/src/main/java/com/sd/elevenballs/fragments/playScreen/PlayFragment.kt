@@ -8,17 +8,17 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sd.elevenballs.R
 import com.sd.elevenballs.adapter.BallAdapter
 import com.sd.elevenballs.databinding.FragmentPlayBinding
-import com.sd.elevenballs.dto.Ball
+import com.sd.elevenballs.model.Ball
 import com.sd.elevenballs.fragments.endScreen.EndFragment.Companion.textArg
 import com.sd.elevenballs.fragments.endScreen.EndFragment.Companion.winner
-import com.sd.elevenballs.fragments.menu.MenuFragment
 
 class PlayFragment : Fragment() {
 
-    var fragmentBinding: FragmentPlayBinding? = null
+    private var fragmentBinding: FragmentPlayBinding? = null
     private val arrayColor = arrayOf(
         R.drawable.ball_blue_24,
         R.drawable.ball_green_24,
@@ -28,6 +28,8 @@ class PlayFragment : Fragment() {
 
     private var countBall = 11
     private var isWinComp = false
+
+    private var selectedDifficulty = 0 // индекс выбранного, по умолчанию "Просто"
     private val adapter = BallAdapter()
 
     override fun onCreateView(
@@ -69,18 +71,18 @@ class PlayFragment : Fragment() {
                     inflate(R.menu.menu_balls_options)
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
+                            R.id.difficulty -> {
+                                showDifficultyDialog()
+                                true
+                            }
+
                             R.id.newGameBalls -> {
                                 startGame()
                                 true
                             }
 
                             R.id.rulesBalls -> {
-                                val menuDialog = MenuFragment.Companion.newInstance(
-                                    getString(R.string.name_game),
-                                    getString(R.string.rules_balls)
-                                )
-                                val manager = childFragmentManager
-                                menuDialog.show(manager, "MENU_BALLS")
+                                showRulesDialog()
                                 true
                             }
 
@@ -110,7 +112,7 @@ class PlayFragment : Fragment() {
     }
 
     private fun fillField() {
-        for (a in 0..10) {
+        for (x in 0..10) {
             val ball = Ball(arrayColor[(arrayColor.indices).random()])
             adapter.addBall(ball)
         }
@@ -146,11 +148,13 @@ class PlayFragment : Fragment() {
             4, 8 -> {
                 numberBall = 3
                 deleteBall(numberBall)
+                shar = "шара"
             }
 
             5, 9, 10, 11 -> {
                 numberBall = (1..3).random()
                 deleteBall(numberBall)
+                shar = if (numberBall == 1) "шар" else "шара"
             }
         }
         fragmentBinding?.textAnswer?.text = getString(R.string.i_removed, numberBall, shar)
@@ -174,4 +178,39 @@ class PlayFragment : Fragment() {
         fragmentBinding?.textCount?.text = getString(R.string.stock, countBall)
     }
 
+    fun showRulesDialog() {
+        MaterialAlertDialogBuilder(requireActivity())
+            .setIcon(R.drawable.info_24)
+            .setTitle(getString(R.string.rules_title, getString(R.string.name_game)))
+            .setMessage(R.string.rules_balls)
+            .setPositiveButton(getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
+    fun showDifficultyDialog() {
+        val items = arrayOf("Просто", "Средне", "Сложно")
+
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle(getString(R.string.difficult_title))
+            .setSingleChoiceItems(items, selectedDifficulty) { dialog, which ->
+                selectedDifficulty = which
+                onDifficultySelected(selectedDifficulty)
+                dialog.dismiss()
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
+    }
+
+    private fun onDifficultySelected(index: Int) {
+        when (index) {
+            0 -> { /* Просто */
+            }
+
+            1 -> { /* Средне */
+            }
+
+            2 -> { /* Сложно */
+            }
+        }
+    }
 }

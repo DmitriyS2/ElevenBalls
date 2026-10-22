@@ -4,6 +4,9 @@
         android:id="@+id/newGameBalls"
         android:title="@string/new_game" />
     <item
+        android:id="@+id/difficulty"
+        android:title="@string/difficulty" />
+    <item
         android:id="@+id/rulesBalls"
         android:title="@string/rules" />
 </menu>

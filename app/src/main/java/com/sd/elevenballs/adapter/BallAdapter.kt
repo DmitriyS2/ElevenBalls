@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sd.elevenballs.R
 import com.sd.elevenballs.databinding.BallItemBinding
-import com.sd.elevenballs.dto.Ball
+import com.sd.elevenballs.model.Ball
 
 
 class BallAdapter:RecyclerView.Adapter<BallAdapter.BallHolder>() {
