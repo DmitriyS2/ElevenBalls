@@ -14,3 +14,16 @@
 .cxx
 local.properties
 .idea
+keystore.properties
+keyForApk.base64.txt
+*.jks
+*.keystore
+*.base64
+*.apk
+*.aab
+*.ap_
+*.dm
+app/release/
+app/debug/
+app/build/
+build/
