@@ -35,26 +35,8 @@ class BallAdapter : RecyclerView.Adapter<BallAdapter.BallHolder>() {
     }
 
     fun setBalls(balls: List<Ball>) {
-        val oldSize = ballList.size
-        balls.toTypedArray()
-        val newSize = balls.size
-   //     if (oldSize != newSize) {
-            ballList.clear()
-            ballList.addAll(balls)
-            notifyDataSetChanged()
-   //     }
-    }
-
-    fun addBall(ball: Ball) {
-        ballList.add(ball)
+        ballList.clear()
+        ballList.addAll(balls)
         notifyDataSetChanged()
     }
-
-    fun removeBall() {
-        if (ballList.isEmpty()) return
-        val lastIndex = ballList.lastIndex
-        ballList.removeAt(lastIndex)
-        notifyItemRemoved(lastIndex)
-    }
-
 }

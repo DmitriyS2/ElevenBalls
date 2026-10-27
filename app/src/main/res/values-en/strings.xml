@@ -5,14 +5,12 @@
     <string name="rules_balls">"    There are 11 balls in front of you. You can remove 1 to 3 balls at a time.\n\n    The player who removes the last ball loses."</string>
     <string name="name_game">"11 Balls"</string>
     <string name="number_bigger_stock">"The entered number is greater than the remaining total"</string>
-    <string name="wrong_number">"Invalid number entered!\nTry again"</string>
     <string name="stock">"Remaining: %1$d"</string>
     <string name="dont_be_upset">"Don't be upset!\nBetter luck next time"</string>
+    <string name="congratulations">"Congrats on the win!!!"</string>
     <string name="your_move">"Your turn"</string>
     <string name="i_removed">"I removed %1$s"</string>
     <string name="you_removed">"You removed %1$s"</string>
-    <string name="ball">ball</string>
-    <string name="balls">balls</string>
     <string name="victory_message">"You can congratulate me!!! I beat the computer in ELEVEN BALLS!"</string>
     <string name="new_game">New game</string>
     <string name="difficulty">Difficulty</string>

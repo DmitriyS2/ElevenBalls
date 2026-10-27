@@ -34,19 +34,18 @@ class EndFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val message = if(viewModel.state.value.isCompWin) getString(R.string.dont_be_upset) else ""
-        var image = 0
+        val message =
+            if (viewModel.state.value.isCompWin) getString(R.string.dont_be_upset) else getString(R.string.congratulations)
+        var image: Int
         when (viewModel.state.value.isCompWin) {
             false -> {
                 image = R.drawable.victory
                 binding.buttonShare.visibility = View.VISIBLE
-                binding.text1.visibility = View.GONE
             }
 
             true -> {
                 image = R.drawable.pity
                 binding.buttonShare.visibility = View.GONE
-                binding.text1.visibility = View.VISIBLE
             }
         }
 
