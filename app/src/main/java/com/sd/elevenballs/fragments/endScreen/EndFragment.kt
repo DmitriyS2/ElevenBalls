@@ -11,8 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.sd.elevenballs.R
 import com.sd.elevenballs.databinding.FragmentEndBinding
-import com.sd.elevenballs.util.StringArg
 import androidx.core.net.toUri
+import androidx.fragment.app.activityViewModels
+import com.sd.elevenballs.activity.MainViewModel
 
 class EndFragment : Fragment() {
 
@@ -20,10 +21,7 @@ class EndFragment : Fragment() {
     private val binding: FragmentEndBinding
         get() = _binding!!
 
-    companion object {
-        var Bundle.textArg: String? by StringArg
-        var Bundle.winner: String? by StringArg
-    }
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,17 +34,16 @@ class EndFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val message = arguments?.textArg
-        val winner = arguments?.winner
+        val message = if(viewModel.state.value.isCompWin) getString(R.string.dont_be_upset) else ""
         var image = 0
-        when (winner) {
-            "me" -> {
+        when (viewModel.state.value.isCompWin) {
+            false -> {
                 image = R.drawable.victory
                 binding.buttonShare.visibility = View.VISIBLE
                 binding.text1.visibility = View.GONE
             }
 
-            "comp" -> {
+            true -> {
                 image = R.drawable.pity
                 binding.buttonShare.visibility = View.GONE
                 binding.text1.visibility = View.VISIBLE

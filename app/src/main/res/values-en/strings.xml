@@ -9,7 +9,10 @@
     <string name="stock">"Remaining: %1$d"</string>
     <string name="dont_be_upset">"Don't be upset!\nBetter luck next time"</string>
     <string name="your_move">"Your turn"</string>
-    <string name="i_removed">"I removed %1$d %2$s"</string>
+    <string name="i_removed">"I removed %1$s"</string>
+    <string name="you_removed">"You removed %1$s"</string>
+    <string name="ball">ball</string>
+    <string name="balls">balls</string>
     <string name="victory_message">"You can congratulate me!!! I beat the computer in ELEVEN BALLS!"</string>
     <string name="new_game">New game</string>
     <string name="difficulty">Difficulty</string>
@@ -19,6 +22,12 @@
     <string name="rules">Rules</string>
     <string name="rules_title">Game rules \n%1$s</string>
     <string name="difficult_title">Select game difficulty сложность игры</string>
+    <string name="easy_difficulty">Easy</string>
+    <string name="medium_difficulty">Medium</string>
+    <string name="hard_difficulty">Hard</string>
     <string name="cancel">Cancel</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
+    <string name="ball_1">1 ball</string>
+    <string name="balls_2">2 balls</string>
+    <string name="balls_3">3 balls</string>
 </resources>

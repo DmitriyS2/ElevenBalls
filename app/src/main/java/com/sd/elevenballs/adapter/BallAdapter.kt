@@ -9,7 +9,7 @@ import com.sd.elevenballs.databinding.BallItemBinding
 import com.sd.elevenballs.model.Ball
 
 
-class BallAdapter:RecyclerView.Adapter<BallAdapter.BallHolder>() {
+class BallAdapter : RecyclerView.Adapter<BallAdapter.BallHolder>() {
 
     val ballList = ArrayList<Ball>()
 
@@ -33,14 +33,28 @@ class BallAdapter:RecyclerView.Adapter<BallAdapter.BallHolder>() {
     override fun getItemCount(): Int {
         return ballList.size
     }
+
+    fun setBalls(balls: List<Ball>) {
+        val oldSize = ballList.size
+        balls.toTypedArray()
+        val newSize = balls.size
+   //     if (oldSize != newSize) {
+            ballList.clear()
+            ballList.addAll(balls)
+            notifyDataSetChanged()
+   //     }
+    }
+
     fun addBall(ball: Ball) {
         ballList.add(ball)
         notifyDataSetChanged()
     }
 
     fun removeBall() {
-        ballList.removeAt(ballList.lastIndex)
-        notifyDataSetChanged()
+        if (ballList.isEmpty()) return
+        val lastIndex = ballList.lastIndex
+        ballList.removeAt(lastIndex)
+        notifyItemRemoved(lastIndex)
     }
 
 }

@@ -8,7 +8,10 @@
     <string name="stock">"Осталось %1$d"</string>
     <string name="dont_be_upset">"Не расстраивайся!\nПовезет в другой раз"</string>
     <string name="your_move">"Твой ход"</string>
-    <string name="i_removed">"Я убрал %1$d %2$s"</string>
+    <string name="i_removed">"Я убрал %1$s"</string>
+    <string name="you_removed">"Ты убрал %1$s"</string>
+    <string name="ball">шар</string>
+    <string name="balls">шара</string>
     <string name="victory_message">"Можешь меня поздравить!!! Компьютер был обыгран мной в игре ELEVEN BALLS!"</string>
     <string name="new_game">Новая игра</string>
     <string name="difficulty">Сложность</string>
@@ -18,6 +21,12 @@
     <string name="rules">Правила</string>
     <string name="rules_title">Правила игры \n%1$s</string>
     <string name="difficult_title">Выберите сложность игры</string>
+    <string name="easy_difficulty">Просто</string>
+    <string name="medium_difficulty">Средне</string>
+    <string name="hard_difficulty">Сложно</string>
     <string name="cancel">Отмена</string>
     <string name="ok">Ок</string>
+    <string name="ball_1">1 шар</string>
+    <string name="balls_2">2 шара</string>
+    <string name="balls_3">3 шара</string>
 </resources>

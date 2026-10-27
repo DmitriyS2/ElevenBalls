@@ -5,84 +5,83 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sd.elevenballs.R
+import com.sd.elevenballs.activity.MainViewModel
 import com.sd.elevenballs.adapter.BallAdapter
 import com.sd.elevenballs.databinding.FragmentPlayBinding
-import com.sd.elevenballs.model.Ball
-import com.sd.elevenballs.fragments.endScreen.EndFragment.Companion.textArg
-import com.sd.elevenballs.fragments.endScreen.EndFragment.Companion.winner
+import com.sd.elevenballs.enums.Difficulty
+import com.sd.elevenballs.activity.contract.PlayEffect
+import com.sd.elevenballs.activity.contract.PlayEvent
+import com.sd.elevenballs.activity.contract.START_COUNT_BALLS
+import com.sd.elevenballs.util.asString
+import com.sd.elevenballs.util.resolve
+import kotlinx.coroutines.launch
 
 class PlayFragment : Fragment() {
 
-    private var fragmentBinding: FragmentPlayBinding? = null
-    private val arrayColor = arrayOf(
-        R.drawable.ball_blue_24,
-        R.drawable.ball_green_24,
-        R.drawable.ball_orange_24,
-        R.drawable.ball_yellow_24
-    )
+    private var _binding: FragmentPlayBinding? = null
+    private val binding: FragmentPlayBinding
+        get() = _binding!!
 
-    private var countBall = 11
-    private var isWinComp = false
-
-    private var selectedDifficulty = 0 // индекс выбранного, по умолчанию "Просто"
     private val adapter = BallAdapter()
+
+    val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentPlayBinding.inflate(inflater, container, false)
-        fragmentBinding = binding
+        _binding = FragmentPlayBinding.inflate(inflater, container, false)
 
-        startGame()
+        return binding.root
+    }
 
-        binding.rcBalls.layoutManager = GridLayoutManager(activity, 11)
-        binding.rcBalls.adapter = adapter
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonForNumber.setOnClickListener {
-            val text = binding.editNumber.text.toString()
-            if (!binding.editNumber.text.isNullOrEmpty() && text.length == 1) {
-                val numberInput = binding.editNumber.text.toString().toInt()
-                if (numberInput in 1..3) {
-                    if ((countBall - numberInput) >= 0) {
-                        binding.editNumber.setText("")
-                        Thread.sleep(500)
-                        elevenBalls(numberInput)
-                    } else {
-                        binding.editNumber.setText("")
-                        binding.textAnswer.text = getString(R.string.number_bigger_stock)
-                    }
-
-                } else {
-                    binding.editNumber.setText("")
-                    binding.textAnswer.text = getString(R.string.wrong_number)
-                }
-            }
-        }
+        collectEvent()
+        collectEffect()
 
         binding.apply {
+            rcBalls.layoutManager = GridLayoutManager(activity, START_COUNT_BALLS)
+            rcBalls.adapter = adapter
+
+            button1.setOnClickListener {
+                viewModel.onEvent(PlayEvent.OnClickButtonBall(1))
+            }
+            button2.setOnClickListener {
+                viewModel.onEvent(PlayEvent.OnClickButtonBall(2))
+            }
+            button3.setOnClickListener {
+                viewModel.onEvent(PlayEvent.OnClickButtonBall(3))
+            }
+
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.menu_balls_options)
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
                             R.id.difficulty -> {
-                                showDifficultyDialog()
+                                viewModel.onEvent(PlayEvent.OnClickChangeDifficulty)
                                 true
                             }
 
                             R.id.newGameBalls -> {
-                                startGame()
+                                viewModel.onEvent(PlayEvent.OnClickNewGame)
                                 true
                             }
 
                             R.id.rulesBalls -> {
-                                showRulesDialog()
+                                viewModel.onEvent(PlayEvent.OnClickShowRules)
                                 true
                             }
 
@@ -92,90 +91,48 @@ class PlayFragment : Fragment() {
                 }.show()
             }
         }
-        return binding.root
     }
 
     override fun onDestroyView() {
-        fragmentBinding = null
+        _binding = null
         super.onDestroyView()
     }
 
-    private fun startGame() {
-        adapter.ballList.clear()
-        fragmentBinding?.apply {
-            textAnswer.text = getString(R.string.your_move)
-            fillField()
-            countBall = 11
-            isWinComp = false
-            textCount.text = getString(R.string.stock, countBall)
+    private fun collectEvent() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    adapter.setBalls(state.balls)
+                    binding.apply {
+                        button1.isEnabled = state.isButtonsCountBallsEnabled
+                        button2.isEnabled = state.isButtonsCountBallsEnabled
+                        button3.isEnabled = state.isButtonsCountBallsEnabled
+                        textAnswer.text = state.textAnswer?.asString(requireContext())
+                        textCount.text = resolve(state.textCount)
+                    }
+                }
+            }
         }
     }
 
-    private fun fillField() {
-        for (x in 0..10) {
-            val ball = Ball(arrayColor[(arrayColor.indices).random()])
-            adapter.addBall(ball)
+    private fun collectEffect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.effect.collect { effect ->
+                    when (effect) {
+                        PlayEffect.ShowRules -> showRulesDialog()
+                        PlayEffect.ShowDifficultyDialog -> showDifficultyDialog()
+                        PlayEffect.NavigateToEnd -> navigateToEndScreen()
+                        is PlayEffect.ShowToast -> showToast(resolve(effect.text))
+                    }
+                }
+            }
         }
     }
 
-    private fun elevenBalls(number: Int) {
-        deleteBall(number)
-        var numberBall = 0
-        var shar = "шар"
-        when (countBall) {
-            1 -> {
-                Thread.sleep(1000)
-                findNavController()
-                    .navigate(
-                        R.id.action_playFragment_to_endFragment,
-                        Bundle().apply {
-                            textArg = ""
-                            winner = "me"
-                        })
-            }
-
-            2, 6 -> {
-                numberBall = 1
-                deleteBall(numberBall)
-            }
-
-            3, 7 -> {
-                numberBall = 2
-                deleteBall(numberBall)
-                shar = "шара"
-            }
-
-            4, 8 -> {
-                numberBall = 3
-                deleteBall(numberBall)
-                shar = "шара"
-            }
-
-            5, 9, 10, 11 -> {
-                numberBall = (1..3).random()
-                deleteBall(numberBall)
-                shar = if (numberBall == 1) "шар" else "шара"
-            }
-        }
-        fragmentBinding?.textAnswer?.text = getString(R.string.i_removed, numberBall, shar)
-    }
-
-    private fun deleteBall(count: Int) {
-        for (i in 1..count) {
-            adapter.removeBall()
-            countBall--
-            if (countBall == 0) {
-                Thread.sleep(2000)
-                findNavController()
-                    .navigate(
-                        R.id.action_playFragment_to_endFragment,
-                        Bundle().apply {
-                            textArg = getString(R.string.dont_be_upset)
-                            winner = "comp"
-                        })
-            }
-        }
-        fragmentBinding?.textCount?.text = getString(R.string.stock, countBall)
+    private fun navigateToEndScreen() {
+        findNavController()
+            .navigate(R.id.action_playFragment_to_endFragment)
     }
 
     fun showRulesDialog() {
@@ -188,29 +145,20 @@ class PlayFragment : Fragment() {
     }
 
     fun showDifficultyDialog() {
-        val items = arrayOf("Просто", "Средне", "Сложно")
+        val itemsDifficulty: Array<String> =
+            Difficulty.entries.map { getString(it.displayNameRes) }.toTypedArray()
 
-        MaterialAlertDialogBuilder(requireActivity())
-            .setTitle(getString(R.string.difficult_title))
-            .setSingleChoiceItems(items, selectedDifficulty) { dialog, which ->
-                selectedDifficulty = which
-                onDifficultySelected(selectedDifficulty)
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.difficult_title)
+            .setSingleChoiceItems(itemsDifficulty, viewModel.state.value.difficulty.index) { dialog, which ->
+                viewModel.onEvent(PlayEvent.ChangeDifficulty(which))
                 dialog.dismiss()
             }
-            .setNegativeButton(getString(R.string.cancel), null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
-    private fun onDifficultySelected(index: Int) {
-        when (index) {
-            0 -> { /* Просто */
-            }
-
-            1 -> { /* Средне */
-            }
-
-            2 -> { /* Сложно */
-            }
-        }
+    private fun showToast(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 }

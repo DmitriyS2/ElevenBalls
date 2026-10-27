@@ -53,7 +53,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcBalls"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:layout_marginHorizontal="8dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,26 +61,36 @@
         app:layout_constraintTop_toBottomOf="@id/textAnswer"
         tools:listitem="@layout/ball_item" />
 
-    <EditText
-        android:id="@+id/editNumber"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/line_buttons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:hint="@string/input_count_balls"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="36dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/rcBalls">
 
-    <Button
-        android:id="@+id/buttonForNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/enter"
-        app:layout_constraintEnd_toEndOf="@id/editNumber"
-        app:layout_constraintStart_toStartOf="@id/editNumber"
-        app:layout_constraintTop_toBottomOf="@id/editNumber" />
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ball_1" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/balls_2" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/balls_3" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
