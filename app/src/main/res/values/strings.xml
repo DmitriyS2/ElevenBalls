@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ElevenBalls</string>
+    <string name="app_name">11 шаров</string>
     <string name="chooser_share_post">Поделиться</string>
     <string name="rules_balls">"    Перед Вами 11 шаров. Нужно убирать по 1–3 шара за раз.\n\n    Проигрывает тот, кто убирает последний шар"</string>
     <string name="name_game">"11 шаров"</string>
